@@ -16,7 +16,6 @@ SRC_DIR = File.join ".", "src"
 EX_DIR  = File.join ".", "examples"
 
 SRC = FileList["#{SRC_DIR}/*.{f,F}*"]
-OBJ = SRC.ext('o')
 EX  = FileList["#{EX_DIR}/**/*.{f,F}*"]
 
 LDFLAGS = ""
@@ -47,9 +46,11 @@ end
 desc "Compile source files"
 task :sources => SRC do |t|
   t.prerequisites.sort.each do |src|
-    sh "gfortran -std=#{STD} -J#{MOD_DIR} #{OPTIONS} -I. -c #{src} -o #{src.ext('o')}"
+    # Remove the prefix on the source file that orders compilation
+    outfile = File.join File.dirname(src), src.ext('o')[src.ext('o').index('_')+1..-1]
+    sh "gfortran -std=#{STD} -J#{MOD_DIR} #{OPTIONS} -I. -c #{src} -o #{outfile}"
   end
-  sh "ar -cr #{LIB_DIR}/lib#{LIB}.a #{OBJ}"
+  sh "ar -cr #{LIB_DIR}/lib#{LIB}.a #{FileList["#{SRC_DIR}/**/*.o"]}"
 end
 
 desc "Run examples"

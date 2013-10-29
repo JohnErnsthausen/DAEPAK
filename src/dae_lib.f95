@@ -31,19 +31,8 @@ module file_sup
 !
 integer, parameter :: name_len = 12      ! max length of file names
 integer, parameter :: loglun = 4         ! the unit of the logfile
+integer, save      :: lunit              ! the unit of the outfile
 !
-!  file type
-!
-type :: file
-   !
-   integer                 :: lun        ! logical unit number
-   character(len=name_len) :: name       ! file-name
-   integer                 :: iostat     ! status of last operation
-   type(file), pointer     :: nxtfil     ! pointer to next file
-   !
-end type file
-!
-type(file), target :: logfile
 !
 contains
   !
@@ -53,71 +42,25 @@ contains
     !
     character(len=*), intent(in) :: name
     !
-    logfile%lun = loglun
-    logfile%name = trim(name)//'.log'
-    nullify(logfile%nxtfil)
-    !
-    open(unit=logfile%lun, file=logfile%name, &        
-      status='REPLACE',action= 'WRITE',iostat= logfile%iostat)
-    !
-    if(logfile%iostat /= 0) then
-      write(*,'(a)') trim('cannot open' // logfile%name)
-    else
-      call log_msg('open_log',0,trim('opened  '// logfile%name))
-    endif
+    open(unit=loglun, file=trim(name)//'.log', status='REPLACE',action= 'WRITE')
     !
   end subroutine open_log
   !
-  subroutine open_file(fil,lunit,stat,name)
+  subroutine open_file(lunit,name)
     !
     implicit none
     !
-    type(file),target, intent(inout) :: fil
     integer,            intent(in)    :: lunit
-    character(len=*),   intent(in)    :: stat, name
-    !
-    type(file), pointer :: tmp
-    logical :: open
-    character(len=9), parameter :: srname='open_file'
-    character(len=50) :: note
+    character(len=*),   intent(in)    :: name
     !
     if(lunit == loglun) then
       write(*,'(a,i3)')'logical unit must differ from',loglun
       return
     endif
     !
-    inquire(unit=loglun,opened=open)
-    if(open) then
-      !
-      tmp => logfile
-      do while (associated(tmp%nxtfil))
-        tmp => tmp%nxtfil
-      enddo
-      tmp%nxtfil => fil
-      !
-      fil%lun = lunit
-      fil%name = trim(name)
-      nullify(fil%nxtfil)
-      !
-      open(unit=fil%lun,file= fil%name,   &   ! connect unit to file
-         status=stat, iostat= fil%iostat)     ! check status
-      !
-      if(fil%iostat /= 0) then
-        !
-        note = 'cannot open' // trim(name)
-        call log_msg(srname,98,trim(note))
-        !
-      else
-        !
-        note = 'opened  '// trim(name)
-        call log_msg(srname,0,trim(note))
-        !
-      endif
-    else
-      !
-      write(*,'(a)')'log file has to be opened first'
-      !
-    endif
+    if(lunit == 6) return
+    !
+    open(unit=lunit, file=trim(name)//'.txt', status='REPLACE')
     !
   end subroutine open_file
   !
@@ -125,57 +68,11 @@ contains
     !
     implicit none
     !
-    type(file), pointer :: tmp
-    logical :: open
-    character(len=11), parameter :: srname='close_file'
-    character(len=50) :: note
+    close(unit=loglun,status='KEEP')
     !
-    inquire(unit=loglun, opened=open)
-    if(open) then
-      !
-      tmp => logfile
-      do while (associated(tmp%nxtfil))
-        !
-        tmp => tmp%nxtfil
-        inquire(unit=tmp%lun, opened=open)
-        if(open) then
-          !
-          close(unit=tmp%lun,status='KEEP',iostat=tmp%iostat)
-          !
-          if(tmp%iostat == 0) then
-            note = ' closed  ' // tmp%name
-            call log_msg(srname,0,trim(note))
-          else
-            note = 'cannot close file ' // trim(tmp%name)
-            call log_msg(srname,99,trim(note))
-          endif
-          !
-        endif
-      enddo
-      !
-    endif
+    if(lunit == 6) return
     !
-    tmp => logfile
-    do while (associated(tmp%nxtfil))
-      !
-      if(tmp%lun /=0) then
-        tmp%lun    = tmp%nxtfil%lun
-        tmp%name   = tmp%nxtfil%name
-        tmp%nxtfil => tmp%nxtfil%nxtfil
-      endif
-      !
-    enddo
-    tmp%lun = 0
-    tmp%name = ' '
-    nullify(tmp%nxtfil)
-    !
-    close(unit=logfile%lun,status='KEEP',iostat=tmp%iostat)
-    !
-    if(tmp%iostat == 0) then
-      write(*,'(a)')' closed log file'
-    else
-      write(*,'(a)')' cannot close log file'
-    endif
+    close(unit=lunit,status='KEEP')
     return
     !
   end subroutine close_file
@@ -190,7 +87,7 @@ contains
     integer,          intent(in) :: infon       ! info number
     character(len=*), intent(in) :: msg         ! the message
     !
-    write(unit= logfile%lun, fmt='(a,i3,a)')trim(srname)// ' :: &
+    write(unit= loglun, fmt='(a,i3,a)')trim(srname)// ' :: &
                                     &info= ',infon,' '//trim(msg)
     !
   end subroutine log_msg
@@ -1084,7 +981,6 @@ contains
     real(kind=RP) :: cnr,cnrj,taui,tmp1,tmp2,tmp3
     !
     real(kind=RP), parameter :: fact=0.05_RP,zer=0.0_RP,one=1.0_RP
-    real(kind=RP), parameter :: safmin=tiny(one)
     !-------------------------------------------------------------
     ! Computes the QR factorization  a*p = q*r  with pivoting
     ! on the columns of an m by n matrix a.
@@ -1195,7 +1091,7 @@ contains
     real(kind=RP), dimension(0:),    intent(out)   :: x
     integer,                         intent(out)   :: info
     !
-    integer       :: i,j,km,kn             ! local variables
+    integer       :: j,km,kn             ! local variables
     real(kind=RP) :: sum, tmp
     real(kind=RP), parameter :: zer=0.0_RP
     !----------------------------------------------------------------

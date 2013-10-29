@@ -173,9 +173,6 @@ contains
     integer,          intent(in)  :: nvd,nva,nvu,nvw
     integer,          intent(out) :: info
     !
-    type(file)    :: output
-    real(kind=RP) :: tmp
-    !
     !-------------------------------------------------
     ! Opens the files for the log and the output,
     ! initializes the statistics counters, and sets
@@ -190,7 +187,7 @@ contains
     !
     outlun = outunit
     call open_log(pname)
-    call open_file(output,outlun,'REPLACE',trim(pname)//'.out')
+    call open_file(outlun,pname)
     !
     ! initialize data for the ode solver
     !
@@ -610,7 +607,7 @@ contains
     !
     ! local variables and parameters
     !
-    integer                  :: i,j,kbs,kbm,kba
+    integer                  :: j,kbs,kbm,kba
     real(kind=RP), parameter :: zer=0.0_RP, one=1.0_RP
     !
     !--------------------------------------------------------
@@ -865,13 +862,12 @@ contains
     ! parameters and local variables
     !
     real(kind=RP), parameter :: testhi   = 1.5_RP, &
-                                testlo   = 0.95_RP, &
-                                testerr  = 1.0e3_RP
+                                testlo   = 0.95_RP
     !
-    integer       :: kbs,kbm,kba,kfail,kpred,i
-    real(kind=RP) :: fnrm,stepl,fnrml,step,tolx
+    integer       :: kbs,kbm,kba,kfail,kpred
+    real(kind=RP) :: fnrm,stepl,fnrml,step
     real(kind=RP) :: ritst,xfact,cdist
-    real(kind=RP) :: fnquot,stquot,quot,err
+    real(kind=RP) :: quot,err
     !
     real(kind=RP), parameter :: zer = 0.0_RP, one = 1.0_RP
     !
@@ -1099,7 +1095,7 @@ contains
         ! 
       case ('nohol')
         !
-        call dynh(xbs,y,xp,zp,info)
+        call dynh(xbs,xp,zp,info)
         ! 
       case ('daeq3')
         !
@@ -1289,7 +1285,7 @@ contains
     real(kind=RP), dimension(0:),  intent(inout) :: zp
     integer,                       intent(inout) :: info
     !
-    integer :: i,j
+    integer :: j
     !------------------------------------------------------
     !
     jzm  => jwrk                       ! associate 
@@ -1363,7 +1359,7 @@ contains
     !
   end subroutine dyq2
   !  
-  subroutine dynh(xbs,y,xp,zp,info)
+  subroutine dynh(xbs,xp,zp,info)
     !
     !-------------------------------------------------------
     ! Routine for evaluating the local direction for DAEs 
@@ -1384,12 +1380,11 @@ contains
     implicit none
     !
     type(basis),                   intent(in)    :: xbs
-    real(kind=RP), dimension(0:),  intent(inout) :: y
     real(kind=RP), dimension(0:),  intent(inout) :: xp
     real(kind=RP), dimension(0:),  intent(inout) :: zp
     integer,                       intent(inout) :: info
     !
-    integer :: i,j,istart
+    integer :: i,j
     !------------------------------------------------------
     !
     jzm  => jwrk                       ! associate 
@@ -1493,7 +1488,7 @@ contains
     real(kind=RP), dimension(0:),  intent(inout) :: zp
     integer,                       intent(inout) :: info
     !
-    integer :: i,j,istart
+    integer :: j,istart
     !------------------------------------------------------
     !
     jzm  => jwrk                       ! associate 
@@ -1623,7 +1618,7 @@ contains
     real(kind=RP), dimension(0:),  intent(inout) :: zp
     integer,                       intent(inout) :: info
     !
-    integer :: i,j,istart
+    integer :: j,istart
     !------------------------------------------------------
     !
     jzm  => jwrk                       ! associate 
@@ -1772,11 +1767,10 @@ subroutine daeslv(info)
   !
   ! local variables
   !
-  integer                :: i,j
   character(LEN=6), save :: task,ptyp
   type(basis),      save :: xbs
   integer,          save :: itstp,kbas,kfail
-  logical,          save :: presup, presw,interp,last
+  logical,          save :: interp,last
   real(kind=RP),    save :: hold,tc,tprev,tloc,tnext,tprnt
   real(kind=RP),    save :: alpha
   !

@@ -7,7 +7,7 @@
 !  u2''            + w cos t = 0
 !  -u1'*sin t + u2'*cos t    = 0
 !
-!  u1(0) = 0.0, u2(0) = 0.0, u3(0) = 0.0, u4(0) = 0.0  
+!  u1(0) = 0.0, u2(0) = 0.0, u3(0) = 0.0, u4(0) = 1.0  
 !
 ! The exact solution is
 !
@@ -71,6 +71,7 @@ program tskate
   ! set initial point
   !
   x(0:4) = 0.0_RP
+  x(4) = 1.0_RP
   !
   ! set global data
   !

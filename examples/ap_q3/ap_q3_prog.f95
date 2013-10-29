@@ -244,7 +244,6 @@ subroutine solout(nstp,xc,hinch,info)
   real(kind=RP),                intent(out) :: hinch
   integer,                      intent(out) :: info
   !
-  integer       :: i 
   real(kind=RP) :: t,ue1,ue2,upe1,upe2,we
   !-----------------------------------------------------------
   ! Routine for intermediate printout of the solution vector

@@ -143,7 +143,7 @@ subroutine daefct(fname,xc,vc,vec,mat,iret)
   !
 end subroutine daefct
 !
-subroutine solout(nstp,xc,tichg,info)
+subroutine solout(nstp,xc,hinch,info)
   !
   use def_kinds, ONLY : RP => RPX
   use dae_dat
@@ -152,7 +152,7 @@ subroutine solout(nstp,xc,tichg,info)
   intrinsic sin, cos
   integer,                      intent(in)  :: nstp
   real(kind=RP), dimension(0:), intent(in)  :: xc
-  real(kind=RP),                intent(out) :: tichg
+  real(kind=RP),                intent(out) :: hinch
   integer,                      intent(out) :: info
   !
   real(kind=RP) :: t, ue, upe, we 

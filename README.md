@@ -1,4 +1,4 @@
-DAEPAK-2.0.0
+DAEPAK
 ============
 
 DAE solver based on geometric techniques
@@ -16,7 +16,8 @@ DAE solver based on geometric techniques
 > The library now compiles and runs the examples without coredump and produces the runtime results Prof. Rheinboldt
 > appened to the main example program.
 
-The author believes no one is actively maintaining DAEPAK and has created this git repository to continue maintaining this DAE solver library.
+The author believes no one is actively maintaining DAEPAK and has created this git repository
+to bring awareness, for continue maintainence, and for free distribution of this DAE solver library.
 
 
 Differential Algebraic Equation Solvers
@@ -25,92 +26,92 @@ Differential Algebraic Equation Solvers
 Solver for quasilinear DAEs of the following form
 
 ### DAEQ1
-    a(t,u)u' = h(t,u)
-    f(t,u)   = 0
-    u(t0) = u0, such that f(t0,u0) = 0
+    A(t,u)u' = H(t,u)
+    F(t,u)   = 0
+    u(t0) = u0, such that F(t0,u0) = 0
     
-    dim(rge a)= dim(rge h) = nd, dim(rge f) = na, 
-    nu = nd na, nw = 0, dim(u) = nu,
+    dim(rge A)= dim(rge H) = nd, dim(rge F) = na, 
+    nu = nd+na, nw = 0, dim(u) = nu,
     
-    requires subroutine daefct with 
-      fname = 'amt ' for evaluating a(t,u)
-      fname = 'hf  ' for evaluating h(t,u)
-      fname = 'ff  ' for evaluating f(t,u)
-      fname = 'dff ' for evaluating df(t,u)
+    requires subroutine DAEFCT with 
+      fname = 'amt ' for evaluating A(t,u)
+      fname = 'hf  ' for evaluating H(t,u)
+      fname = 'ff  ' for evaluating F(t,u)
+      fname = 'dff ' for evaluating DF(t,u)
 
 ### DAEN1
-    u' = v 
-    f(t,u,v,w) = 0,
+    u' = v
+    F(t,u,v,w) = 0,
     u(t0) = u0, v(t0) = up0, w(t0) = w0, 
-                such that f(t0,u0,up0,w0) = 0
+                such that F(t0,u0,up0,w0) = 0
     
     dim(u) = nu, dim(w) = nw,
-    nd = nu, na = nu + nw, dim(rge f)= na
+    nd = nu, na = nu + nw, dim(rge F)= na
     
-    requires subroutine daefct with 
-      fname = 'ff  ' for evaluating f(t,u)
-      fname = 'dff ' for evaluating df(t,u)
+    requires subroutine DAEFCT with 
+      fname = 'ff  ' for evaluating F(t,u)
+      fname = 'dff ' for evaluating DF(t,u)
 
 ### DAEQ2
-    a(t,u)u' + b(t,u)w = h(t,u)
-    f(t,u)             = 0
-    u(t0) = u0, such that f(t0,u0) = 0
+    A(t,u)u' + B(t,u)w = H(t,u)
+    F(t,u)             = 0
+    u(t0) = u0, such that F(t0,u0) = 0
     
-    dim(rge a)= dim(rge h) = nd, dim(rge f)= na, 
+    dim(rge A)= dim(rge H) = nd, dim(rge F)= na, 
     dim(w) = nw, dim(u) = nu, nu + nw = nd + na
     
-    requires subroutine daefct with 
-      fname = 'amt ' for evaluating a(t,u)
-      fname = 'bmt ' for evaluating b(t,u)
-      fname = 'hf  ' for evaluating h(t,u)
-      fname = 'ff  ' for evaluating f(t,u)
-      fname = 'dff ' for evaluating df(t,u)
+    requires subroutine DAEFCT with 
+      fname = 'amt ' for evaluating A(t,u)
+      fname = 'bmt ' for evaluating B(t,u)
+      fname = 'hf  ' for evaluating H(t,u)
+      fname = 'ff  ' for evaluating F(t,u)
+      fname = 'dff ' for evaluating DF(t,u)
 
 ### NOHOL
-    a(u) u" + d_{u'}f(t,u,u')^T w = h(t,u,u')
-    f(t,u,u')                     = 0
+    A(u) u" + d_{u'}F(t,u,u')^T w = H(t,u,u')
+    F(t,u,u')                     = 0
     u(t0) = u0, u'(t0) = up0
-                such that f(t0,u0,up0) = 0
+                such that Ft0,u0,up0) = 0
     
-    dim(rge a)= dim(rge h) = nd, dim(rge f)= na, 
+    dim(rge A)= dim(rge H) = nd, dim(rge F)= na, 
     dim(w) = na, dim(u) = nd,
     
-    requires subroutine daefct with 
-      fname = 'amt ' for evaluating a(u)
-      fname = 'hf  ' for evaluating h(t,u,u')
-      fname = 'ff  ' for evaluating f(t,u,u')
-      fname = 'dff ' for evaluating df(t,u,u')
+    requires subroutine DAEFCT with 
+      fname = 'amt ' for evaluating A(u)
+      fname = 'hf  ' for evaluating H(t,u,u')
+      fname = 'ff  ' for evaluating F(t,u,u')
+      fname = 'dff ' for evaluating DF(t,u,u')
 
 ### DAEQ3
-    a(t,u,u')u" + b(t,u,u')w = h(t,u,u')
-    f(t,u)                   = 0
-    u(t0)=u0, u'(t0)=up0, such that f(t0,u0) = 0
+    A(t,u,u')u" + B(t,u,u')w = H(t,u,u')
+    F(t,u)                   = 0
+    u(t0)=u0, u'(t0)=up0, such that F(t0,u0) = 0
     
-    dim(rge f)= na, dim(w) = nw, 
-    dim(rge a)= dim(rge h) = nd, dim(u) = nd+na-nw
+    dim(rge F)= na, dim(w) = nw, 
+    dim(rge A)= dim(rge H) = nd, dim(u) = nd+na-nw
     
     requires subroutine daefct with 
-      fname = 'amt ' for evaluating a(t,u,u')
-      fname = 'bmt ' for evaluating b(t,u,u')
-      fname = 'hf  ' for evaluating h(t,u,u')
-      fname = 'ff  ' for evaluating f(t,u)
-      fname = 'dff ' for evaluating df(t,u)
-      fname = 'd2ff' for evaluating d2f(t,u)(v,v)
+      fname = 'amt ' for evaluating A(t,u,u')
+      fname = 'bmt ' for evaluating B(t,u,u')
+      fname = 'hf  ' for evaluating H(t,u,u')
+      fname = 'ff  ' for evaluating F(t,u)
+      fname = 'dff ' for evaluating DF(t,u)
+      fname = 'd2ff' for evaluating D2F(t,u)(v,v)
 
 ### EULAG
-    a(u) u" + df(u)^T w = h(u,u')
-    f(u)                = 0
-    u(t0) = u0, such that f(u0) = 0
+    A(u) u" + DF(u)^T w = H(u,u')
+    F(u)                = 0
+    u(t0) = u0, such that F(u0) = 0
     
-    dim(rge a) = dim(rge h) = nd, dim(rge f) = na
+    dim(rge A) = dim(rge H) = nd, dim(rge F) = na
     dim(w) = na, dim(u) = nd
     
-    requires subroutine daefct with 
-      fname = 'amt ' for evaluating a(u)
-      fname = 'hf  ' for evaluating h(u,u')
-      fname = 'ff  ' for evaluating f(u)
-      fname = 'dff ' for evaluating df(u)
-      fname = 'd2ff' for evaluating d2f(u)(v,v)
+    requires subroutine DAEFCT with 
+      fname = 'amt ' for evaluating A(u)
+      fname = 'hf  ' for evaluating H(u,u')
+      fname = 'ff  ' for evaluating F(u)
+      fname = 'dff ' for evaluating DF(u)
+      fname = 'd2ff' for evaluating D2F(u)(v,v)
 
 Roadmap for the Future
 ======================

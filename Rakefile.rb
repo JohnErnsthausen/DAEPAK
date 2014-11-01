@@ -2,75 +2,56 @@
 
 require 'rake/clean'
 
-# Set the bash environemnt variable PFUNIT
-#
-# export PFUNIT=/cygdrive/c/Users/John/run/pFUnit
-#
-
 LIB = "daepak-2.0.0"
-STD = "f95"
 
-MOD_DIR = File.join ".", "include"
-LIB_DIR = File.join ".", "lib"
+ATOM = File.join ".", "atom"
 SRC_DIR = File.join ".", "src"
 EX_DIR  = File.join ".", "examples"
+EXAMPLES = FileList["#{EX_DIR}/*/"].uniq.sort
 
-SRC = FileList["#{SRC_DIR}/*.{f,F}*"]
-EX  = FileList["#{EX_DIR}/**/*.{f,F}*"]
+OPTIONS = "-Wall -pedantic"
 
-LDFLAGS = ""
-OPTIONS = "-Wextra -Wall -pedantic"
-
-CLEAN.include("#{SRC_DIR}/*.o")
-CLOBBER.include("#{LIB_DIR}/*.*",
-                "#{MOD_DIR}/*.*",
-                "#{EX_DIR}/**/*.o", "#{EX_DIR}/**/*.mod", "#{EX_DIR}/**/*.x")
-
-def timestamp
-  time = Time.new
-  return time.strftime('%Y%m%d')
-end
-
-desc "Make the directory for modules"
-directory File.basename(MOD_DIR)
-
-desc "Make the directory for libraries"
-directory File.basename(LIB_DIR)
-
-desc "Make dependency directories in convenient task"
-task :dirs do |t|
-  Rake::Task[File.basename(MOD_DIR)].invoke
-  Rake::Task[File.basename(LIB_DIR)].invoke
-end
+CLEAN.include("#{ATOM}","./**/*.{o,mod,x}")
+CLOBBER.include("./**/*.{log,txt}", "lib#{LIB}.a")
 
 desc "Compile source files"
-task :sources => SRC do |t|
-  t.prerequisites.sort.each do |src|
-    # Remove the prefix on the source file that orders compilation
-    outfile = File.join File.dirname(src), src.ext('o')[src.ext('o').index('_')+1..-1]
-    sh "gfortran -std=#{STD} -J#{MOD_DIR} #{OPTIONS} -I. -c #{src} -o #{outfile}"
+task :sources do |t|
+  sh "cp -r #{SRC_DIR} #{ATOM}"
+  Dir.chdir(ATOM) do
+    FileList["#{"./*.{f,F}*"}"].uniq.sort.each do |src|
+      # Remove the prefix on the source file that orders compilation
+      srcfile = File.basename(src)
+      outfile = File.basename(src).ext('o')
+      sh "gfortran #{OPTIONS} -c #{srcfile} -o #{outfile}"
+    end
   end
-  sh "ar -cr #{LIB_DIR}/lib#{LIB}.a #{FileList["#{SRC_DIR}/**/*.o"]}"
+  sh "ar -cr lib#{LIB}.a #{FileList["#{ATOM}/**/*.{o,mod}"]}"
 end
 
 desc "Run examples"
-task :examples => EX do |t|
-  t.prerequisites.sort.each do |src|
-    begin
-      dn = File.dirname(src)
-      sn = FileList["#{dn}/*.f*"]
-      sn.each do |s|
-        puts s
-        sh "gfortran -std=#{STD} #{OPTIONS} -J#{MOD_DIR} -I. -c #{s} -o #{s.ext('o')}"
-        if s.include?('_prog')
-          sh "gfortran -std=#{STD} -I#{dn} -I#{MOD_DIR} -L#{LIB_DIR} #{sn.ext('o')} -o #{src.ext('x')} -l#{LIB}"
-          sh "#{src.ext('x')}"
+task :examples => EXAMPLES do |t|
+  t.prerequisites.uniq.sort.each do |ex|
+    # Order is important here. Get example sources. Then copy in solver sources.
+    puts sources = FileList["#{ex}/*.f*"].collect{|f| File.basename(f)}
+    sh "cp lib#{LIB}.a #{ex}"
+    Dir.chdir(ex) do
+      begin
+        sh "ar x lib#{LIB}.a && rm lib#{LIB}.a"
+        sources.each do |s|
+          puts s
+          sh "gfortran #{OPTIONS} -c #{s} -o #{s.ext('o')}"
+          if s.include?('_prog')
+            puts objects = FileList["*.o"].join(' ')
+            sh "gfortran #{OPTIONS} #{objects} -o #{s.ext('x')}"
+            sh "./#{s.ext('x')}"
+          end
         end
+      rescue
+        puts "In rescue mode for src=[#{src}]\n\n"
+        #
       end
-    rescue
-      puts "In rescue mode for src=[#{src}]\n\n"
-      #
     end
   end
 end
+
 

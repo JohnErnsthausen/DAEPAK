@@ -7,7 +7,7 @@ W.C. Rheinboldt wrote the original solvers and supporting libraries in Fortran 9
 The initial commit is exactly these files unpacked into a directory structure for development.
 
 No one is actively maintaining DAEPAK. I value this technology and created this git repository
-to bring awareness, for continue maintainence, and for free distribution of this DAE solver library.
+to bring awareness, for continue maintenance, and for free distribution of this DAE solver library.
 
 
 Differential Algebraic Equation Solvers
@@ -105,10 +105,10 @@ Solver for quasilinear DAEs of the following form
 
 Getting Started with DAEPAK
 ===========================
-DAEPAK is writtien is Fortran 95 and requires a fortran compiler.
+DAEPAK is written is Fortran 95 and requires a fortran compiler.
 
 A choice on Windows in the MinGW environment is the [MinGW fortran compiler](http://www.mingw.org)
-and there is (video) suport to install this compiler. A recent installer installed GNU Fortran (GCC) version 4.8.1.
+and there is (video) support to install this compiler. A recent installer installed GNU Fortran (GCC) version 4.8.1.
 Another choice on Windows in [CygWin](https://www.cygwin.com) which has ha package manager.
 
 A [Ruby](http://www.ruby-doc.org) installation which includes the rake gem is required to utilize execute

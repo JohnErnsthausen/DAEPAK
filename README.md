@@ -109,10 +109,10 @@ DAEPAK is written is Fortran 95 and requires a fortran compiler.
 
 A choice on Windows in the MinGW environment is the [MinGW fortran compiler](http://www.mingw.org)
 and there is (video) support to install this compiler. A recent installer installed GNU Fortran (GCC) version 4.8.1.
-Another choice on Windows in [CygWin](https://www.cygwin.com) which has ha package manager.
+Another choice on Windows in [CygWin](https://www.cygwin.com) which has a package manager.
 
-A [Ruby](http://www.ruby-doc.org) installation which includes the rake gem is required to utilize execute
-rakefile.rb. This is worth doing.
+A [Ruby](http://www.ruby-doc.org) installation which includes the rake gem is required to utilize and execute the
+rakefile rakefile.rb. This is worth doing.
 
 A choice for unit testing is [PFunit](http://en.wikipedia.org/wiki/PFUnit). I plan to create unit tests in the future.
 
@@ -126,6 +126,8 @@ Check that a library file libdaepak.a is in the top-level directory
 
 ### Build and run the library examples
 -  $rake examples
+
+Check out the resulting .LOG and .TXT files in the examples/EXAMPLE directory.
 
 ### Build your example
 -  Follow a prototype --- if need be --- to setup your problem

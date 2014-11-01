@@ -105,16 +105,35 @@ Solver for quasilinear DAEs of the following form
 
 Getting Started with DAEPAK
 ===========================
->
-> The main driver file has been renamed to *_prog.f95 to enable rake to pick it up as the main program.
->
-> On CygWin version 1.7.14, the solvers partially work. All files compile under gfortran -std=f95. Examples
-> ap_q2 and eight run but the example tskate fails due to step size and the examples ap_q3, catal, and
-> sevbd fail on execution with a core dump. The linked list pattern in the module file_sup caused the program
-> to core dump. A direct file open was adopted. The initial condition in tskate was corrected so that x(4)=1.
-> The library now compiles and runs the examples without coredump and produces the runtime results Prof. Rheinboldt
-> appened to the main example program.
+DAEPAK is writtien is Fortran 95 and requires a fortran compiler.
 
+A choice on Windows in the MinGW environment is the [MinGW fortran compiler](http://www.mingw.org)
+and there is (video) suport to install this compiler. A recent installer installed GNU Fortran (GCC) version 4.8.1.
+Another choice on Windows in [CygWin](https://www.cygwin.com) which has ha package manager.
+
+A [Ruby](http://www.ruby-doc.org) installation which includes the rake gem is required to utilize execute
+rakefile.rb. This is worth doing.
+
+A choice for unit testing is [PFunit](http://en.wikipedia.org/wiki/PFUnit). I plan to create unit tests in the future.
+
+You are ready to build DAEPAK assuming your system is running GNU Fortran (CGG) version 4.8.1 and
+Ruby 1.9.3p429 and Rake.
+### Build the library
+-  $rake clobber
+-  $rake sources
+
+Check that a library file libdaepak.a is in the top-level directory
+
+### Build and run the library examples
+-  $rake examples
+
+### Build your example
+-  Follow a prototype --- if need be --- to setup your problem
+-  Copy libdaepak.a to your examples directory
+-  $ar x libdaepak.a
+-  $gfortran -Wall -pedantic -c YourExamplesFile.f95 -o YourExamplesFile.o
+-  $gfortran -Wall -pedantic ALLSOURCEFILES.o -o YourExamplesFile.x
+-  $./YourExamplesFile.x
 
 Roadmap for the Future
 ======================

@@ -2,7 +2,7 @@
 
 require 'rake/clean'
 
-LIB = "daepak-2.0.0"
+LIB = "daepak"
 
 ATOM = File.join ".", "atom"
 SRC_DIR = File.join ".", "src"
@@ -53,5 +53,6 @@ task :examples => EXAMPLES do |t|
     end
   end
 end
+
 
 

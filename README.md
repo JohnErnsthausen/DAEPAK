@@ -16,8 +16,8 @@ Differential Algebraic Equation Solvers
 Solver for quasilinear DAEs of the following form
 
 ### DAEQ1
-    A(t,u)u' = H(t,u)
-    F(t,u)   = 0
+    A(t,u) u' = H(t,u)
+    F(t,u)    = 0
     u(t0) = u0, such that F(t0,u0) = 0
     
     dim(rge A)= dim(rge H) = nd, dim(rge F) = na, 
@@ -43,8 +43,8 @@ Solver for quasilinear DAEs of the following form
       fname = 'dff ' for evaluating DF(t,u)
 
 ### DAEQ2
-    A(t,u)u' + B(t,u)w = H(t,u)
-    F(t,u)             = 0
+    A(t,u) u' + B(t,u) w = H(t,u)
+    F(t,u)               = 0
     u(t0) = u0, such that F(t0,u0) = 0
     
     dim(rge A)= dim(rge H) = nd, dim(rge F)= na, 
@@ -73,8 +73,8 @@ Solver for quasilinear DAEs of the following form
       fname = 'dff ' for evaluating DF(t,u,u')
 
 ### DAEQ3
-    A(t,u,u')u" + B(t,u,u')w = H(t,u,u')
-    F(t,u)                   = 0
+    A(t,u,u') u" + B(t,u,u') w = H(t,u,u')
+    F(t,u)                     = 0
     u(t0)=u0, u'(t0)=up0, such that F(t0,u0) = 0
     
     dim(rge F)= na, dim(w) = nw, 
@@ -130,7 +130,7 @@ Check that a library file libdaepak.a is in the top-level directory
 Check out the resulting .LOG and .TXT files in the examples/EXAMPLE directory.
 
 ### Build your example
--  Follow a prototype --- if need be --- to setup your problem
+-  Follow a prototype example from the examples/EXAMPLE directory --- if need be --- to setup your problem
 -  Copy libdaepak.a to your examples directory
 -  $ar x libdaepak.a
 -  $gfortran -Wall -pedantic -c YourExamplesFile.f95 -o YourExamplesFile.o
@@ -140,7 +140,6 @@ Check out the resulting .LOG and .TXT files in the examples/EXAMPLE directory.
 Roadmap for the Future
 ======================
 -  Incorporate unit testing
--  Move examples outside the library
 -  Move linear algebra support to its own library
 -  Move ordinary differential equation solver support to its own library
 -  Move manifold support to its own library

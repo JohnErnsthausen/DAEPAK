@@ -1,22 +1,12 @@
 DAEPAK
-============
+======
 
 DAE solver based on geometric techniques
 
-> W.C. Rheinboldt wrote the original solvers and supporting libraries in Fortran 95 released on 11/06/2000.
->
-> The initial commit is exactly these files unpacked into a directory structure for development.
->
-> The main driver file has been renamed to *_prog.f95 to enable rake to pick it up as the main program.
->
-> On CygWin version 1.7.14, the solvers partially work. All files compile under gfortran -std=f95. Examples
-> ap_q2 and eight run but the example tskate fails due to step size and the examples ap_q3, catal, and
-> sevbd fail on execution with a core dump. The linked list pattern in the module file_sup caused the program
-> to core dump. A direct file open was adopted. The initial condition in tskate was corrected so that x(4)=1.
-> The library now compiles and runs the examples without coredump and produces the runtime results Prof. Rheinboldt
-> appened to the main example program.
+W.C. Rheinboldt wrote the original solvers and supporting libraries in Fortran 95 released on 11/06/2000.
+The initial commit is exactly these files unpacked into a directory structure for development.
 
-The author believes no one is actively maintaining DAEPAK and has created this git repository
+No one is actively maintaining DAEPAK. I value this technology and created this git repository
 to bring awareness, for continue maintainence, and for free distribution of this DAE solver library.
 
 
@@ -112,6 +102,19 @@ Solver for quasilinear DAEs of the following form
       fname = 'ff  ' for evaluating F(u)
       fname = 'dff ' for evaluating DF(u)
       fname = 'd2ff' for evaluating D2F(u)(v,v)
+
+Getting Started with DAEPAK
+===========================
+>
+> The main driver file has been renamed to *_prog.f95 to enable rake to pick it up as the main program.
+>
+> On CygWin version 1.7.14, the solvers partially work. All files compile under gfortran -std=f95. Examples
+> ap_q2 and eight run but the example tskate fails due to step size and the examples ap_q3, catal, and
+> sevbd fail on execution with a core dump. The linked list pattern in the module file_sup caused the program
+> to core dump. A direct file open was adopted. The initial condition in tskate was corrected so that x(4)=1.
+> The library now compiles and runs the examples without coredump and produces the runtime results Prof. Rheinboldt
+> appened to the main example program.
+
 
 Roadmap for the Future
 ======================

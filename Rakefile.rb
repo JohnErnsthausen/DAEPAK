@@ -54,5 +54,32 @@ task :examples => EXAMPLES do |t|
   end
 end
 
+desc "Run a single example"
+task :example, :ex do |t, args|
+  model = "#{EX_DIR}/#{args[:ex]}/"
+  raise unless EXAMPLES.include(model)
+  # Order is important here. Get example sources. Then copy in solver sources.
+  puts sources = FileList["#{model}/*.f*"].collect{|f| File.basename(f)}
+  sh "cp lib#{LIB}.a #{model}"
+  Dir.chdir(model) do
+    begin
+      sh "ar x lib#{LIB}.a && rm lib#{LIB}.a"
+      sources.each do |s|
+        puts s
+        sh "gfortran #{OPTIONS} -c #{s} -o #{s.ext('o')}"
+        if s.include?('_prog')
+          puts objects = FileList["*.o"].join(' ')
+          sh "gfortran #{OPTIONS} #{objects} -o #{s.ext('x')}"
+          sh "./#{s.ext('x')}"
+        end
+      end
+    rescue
+      puts "In rescue mode for src=[#{model}]\n\n"
+      #
+    end
+  end
+end
+
+
 
 

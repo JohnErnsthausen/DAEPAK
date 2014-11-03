@@ -124,10 +124,13 @@ Ruby 1.9.3p429 and Rake.
 
 Check that a library file libdaepak.a is in the top-level directory
 
-### Build and run the library examples
+### Build and run ALL the library examples
 -  $rake examples
 
 Check out the resulting .LOG and .TXT files in the examples/EXAMPLE directory.
+
+### Build and run one example (e.g. model_q1) in the examples/model_q1 directory
+-  $rake example[model_q1]
 
 ### Build your example
 -  Follow a prototype example from the examples/EXAMPLE directory --- if need be --- to setup your problem
